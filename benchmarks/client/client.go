@@ -43,7 +43,7 @@ func runTCPClientRTT(n, size int, csvFile string) {
 	msg := strings.Repeat("A", size)
 	rtts := make([]float64, n)
 	start := time.Now()
-	for i := 0; i < n; i++ {
+	for i := range n {
 		sendTime := time.Now()
 		_, err := conn.Write([]byte(msg))
 		if err != nil {
@@ -80,7 +80,7 @@ func runUDPClientRTT(n, size int, csvFile string) {
 	msg := []byte(strings.Repeat("B", size))
 	rtts := make([]float64, n)
 	start := time.Now()
-	for i := 0; i < n; i++ {
+	for i := range n {
 		sendTime := time.Now()
 		_, err := conn.Write(msg)
 		if err != nil {
@@ -148,10 +148,7 @@ func percentile(vals []float64, p float64) float64 {
 	if len(vals) == 0 {
 		return 0
 	}
-	idx := int(math.Ceil((p/100)*float64(len(vals)))) - 1
-	if idx < 0 {
-		idx = 0
-	}
+	idx := max(int(math.Ceil((p/100)*float64(len(vals))))-1, 0)
 	return vals[idx]
 }
 
